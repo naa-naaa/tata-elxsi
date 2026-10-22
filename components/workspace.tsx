@@ -159,7 +159,7 @@ function pageDescription(view: ViewId) {
 
 function WorkspaceView({ state, onNavigate, onAction, onReset, search }: Pick<WorkspaceProps, "state" | "onNavigate" | "onAction" | "onReset"> & { search: string }) {
   switch (state.activeView) {
-    case "overview": return <OverviewView state={state} onNavigate={onNavigate} onAction={onAction} />;
+    case "overview": return <OverviewView state={state} onNavigate={onNavigate} />;
     case "changes": return <ChangeView state={state} onAction={onAction} />;
     case "impact": return <ImpactView state={state} onAction={onAction} search={search} />;
     case "agents": return <AgentsView state={state} onAction={onAction} />;
@@ -174,10 +174,9 @@ function WorkspaceView({ state, onNavigate, onAction, onReset, search }: Pick<Wo
   }
 }
 
-function OverviewView({ state, onNavigate, onAction }: Pick<WorkspaceProps, "state" | "onNavigate" | "onAction">) {
+function OverviewView({ state, onNavigate }: Pick<WorkspaceProps, "state" | "onNavigate">) {
   const failed = state.findings.filter((finding) => finding.result === "FAIL").length;
   const pendingApprovals = state.reviewDecision ? 0 : 1;
-  const completedTasks = state.rpaTasks.filter((task) => task.status === "Completed").length;
   const metrics = [
     ["Active change requests", "01", "CR-1042 · High priority", FileClock, "metric-teal"],
     ["Impacted label variants", String(state.labels.length).padStart(2, "0"), "Across 2 markets", GitBranch, "metric-blue"],
@@ -320,7 +319,7 @@ function AuditView({ state, onAction, search }: Pick<WorkspaceProps, "state" | "
     </div>;
 }
 
-function SettingsView({ state, onReset }: Pick<WorkspaceProps, "state" | "onReset">) {
+function SettingsView({ onReset }: Pick<WorkspaceProps, "onReset">) {
   return <div className="settings-layout"><div className="settings-main"><section className="panel settings-panel"><div className="settings-heading"><span className="settings-symbol"><Settings size={18} /></span><div><div className="panel-title">Simulation configuration</div><p>All controls are local to this demonstration session.</p></div></div><div className="settings-row"><div><b>Simulation mode</b><small>External AI inference and production connectors are disabled.</small></div><span className="setting-active"><i /> Enabled</span></div><div className="settings-row"><div><b>Product family</b><small>Cardiac Monitoring Devices · synthetic source records</small></div><span>CardioSense Monitor</span></div><div className="settings-row"><div><b>Current revision path</b><small>Sample label revision comparison</small></div><span>Rev 2.1 → Rev 2.2</span></div><div className="settings-row"><div><b>Rule library</b><small>Invented rules for demonstration only</small></div><span>DEMO-LABEL-RULES · 1.0</span></div><div className="settings-row"><div><b>Session persistence</b><small>State is stored in this browser only.</small></div><span>Browser storage</span></div></section>
       <section className="panel settings-panel"><div className="settings-heading"><span className="settings-symbol settings-purple"><ShieldCheck size={18} /></span><div><div className="panel-title">Safety and scope</div><p>Prototype limitations and guardrails</p></div></div><div className="scope-list"><span><CheckCircle2 size={15} /> Synthetic product and label data only</span><span><CheckCircle2 size={15} /> Deterministic rules remain independent of agent suggestions</span><span><CheckCircle2 size={15} /> Approval requires an authorized human reviewer</span><span><CheckCircle2 size={15} /> Release is simulated; no manufacturing system is connected</span><span><CheckCircle2 size={15} /> Audit history is application-level, not certified immutable</span><span><CheckCircle2 size={15} /> No real patient information or real regulatory citations</span></div></section></div><aside className="panel reset-panel"><span className="reset-icon"><RotateCcw size={18} /></span><h3>Reset demo session</h3><p>Clear this browser&apos;s simulation data and return to the original CR-1042 demonstration state.</p><button className="button button-danger-outline" onClick={onReset}><RotateCcw size={14} /> Reset all demo data</button><small>This action cannot be undone.</small></aside></div>;
 }
