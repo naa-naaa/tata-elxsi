@@ -75,7 +75,7 @@ export function LabelGuardApp() {
         }
         case "guided-create": {
           const next = { ...previous, request: { ...previous.request, status: "Draft" as const } };
-          return { ...next, auditEvents: [createAuditEvent(next, "Change request created", "CR-1042 specification change confirmed for the guided demonstration.", "Not started", "Draft"), ...next.auditEvents] };
+          return { ...next, auditEvents: [createAuditEvent(next, "Change request created", "CR-1042 specification change confirmed for the guided demonstration.", previous.request.status, "Draft"), ...next.auditEvents] };
         }
         case "run-impact": {
           const next = { ...previous, request: { ...previous.request, status: "Impact Analysis" as const }, selectedLabelIds: previous.labels.map((label) => label.id), activeView: "impact" as const };

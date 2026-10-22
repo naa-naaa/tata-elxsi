@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Activity, AlertCircle, ArrowDown, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, BadgeCheck, Bell, Bot, Check, CheckCircle2, ChevronDown, ChevronRight, Circle, ClipboardCheck, Clock3, Download, FileCheck2, FileClock, FileDiff, FilePlus2, FileSearch, FileText, Filter, Fingerprint, GitBranch, History, Languages, LayoutDashboard, ListChecks, LoaderCircle, LockKeyhole, Menu, MoreHorizontal, Pause, Play, Plus, RefreshCw, RotateCcw, Search, Settings, Shield, ShieldAlert, ShieldCheck, Sparkles, Square, X, Zap
+  Activity, AlertCircle, ArrowRight, ArrowUpRight, BadgeCheck, Bell, Bot, Check, CheckCircle2, ChevronDown, ChevronRight, Circle, ClipboardCheck, Clock3, Download, FileCheck2, FileClock, FileDiff, FilePlus2, FileSearch, FileText, Filter, Fingerprint, GitBranch, History, Languages, LayoutDashboard, LoaderCircle, LockKeyhole, Menu, MoreHorizontal, Pause, Play, RefreshCw, RotateCcw, Search, Settings, Shield, ShieldAlert, ShieldCheck, Sparkles, Square, X, Zap
 } from "lucide-react";
-import type { AuditEvent, ChangeRequest, DemoState, LabelVariant, RpaTask, ViewId } from "@/lib/types";
+import type { AuditEvent, DemoState, LabelVariant, RpaTask, ViewId } from "@/lib/types";
 
 const navigation: { id: ViewId; label: string; icon: typeof LayoutDashboard; group?: string }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard, group: "WORKSPACE" },
@@ -157,7 +157,7 @@ function pageDescription(view: ViewId) {
   return descriptions[view];
 }
 
-function WorkspaceView({ state, onNavigate, onAction, search }: Pick<WorkspaceProps, "state" | "onNavigate" | "onAction"> & { search: string }) {
+function WorkspaceView({ state, onNavigate, onAction, onReset, search }: Pick<WorkspaceProps, "state" | "onNavigate" | "onAction" | "onReset"> & { search: string }) {
   switch (state.activeView) {
     case "overview": return <OverviewView state={state} onNavigate={onNavigate} onAction={onAction} />;
     case "changes": return <ChangeView state={state} onAction={onAction} />;
@@ -170,7 +170,7 @@ function WorkspaceView({ state, onNavigate, onAction, search }: Pick<WorkspacePr
     case "review": return <ReviewView state={state} onAction={onAction} onNavigate={onNavigate} />;
     case "release": return <ReleaseView state={state} onAction={onAction} />;
     case "audit": return <AuditView state={state} onAction={onAction} search={search} />;
-    case "settings": return <SettingsView state={state} onReset={onReset} />;
+    case "settings": return <SettingsView onReset={onReset} />;
   }
 }
 
@@ -330,8 +330,6 @@ function RpaTaskRow({ task, index }: { task: RpaTask; index: number }) {
   return <div className={`rpa-task-row ${isActive ? "rpa-task-active" : ""} ${task.status === "Failed" ? "rpa-task-failed" : ""}`}><span className={`rpa-step-indicator ${task.status === "Completed" ? "rpa-step-done" : ""}`}>{task.status === "Completed" ? <Check size={13} /> : task.status === "Running" ? <LoaderCircle size={13} className="spin-icon" /> : task.status === "Failed" ? <X size={13} /> : String(index + 1).padStart(2, "0")}</span><div className="rpa-task-content"><div className="rpa-task-title"><b>{task.action}</b><span>{task.id}</span></div><div className="rpa-task-meta"><span><GitBranch size={12} /> {task.targetSystem}</span><span><Clock3 size={12} /> {task.duration ?? "—"}</span><span>Retry {task.retryCount}</span></div>{task.status === "Failed" && <p className="rpa-task-error"><AlertCircle size={12} /> Simulated connector timeout. Retry will resume without duplicating the change record.</p>}</div><TaskChip value={task.status} /></div>;
 }
 
-function RpaTaskRowTime({ task }: { task: RpaTask }) { return <time>{task.startTime ? formatClock(task.startTime) : "Queued"}</time>; }
-function RpaTaskRowDate({ task }: { task: RpaTask }) { return <span>{task.startTime ? formatClock(task.startTime) : "Queued"}</span>; }
 
 function FormField({ label, required, wide, children }: { label: string; required?: boolean; wide?: boolean; children: React.ReactNode }) {
   return <label className={`form-field ${wide ? "field-wide" : ""}`}><span>{label}{required && <i> *</i>}</span>{children}</label>;
