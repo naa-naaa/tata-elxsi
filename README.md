@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LabelGuard AI
 
-## Getting Started
+LabelGuard AI is a front-end proof-of-concept for an end-to-end medical device labeling workflow. It demonstrates how a specification change can move through impact analysis, bounded agent tasks, label drafting, deterministic validation, simulated RPA, human review, controlled release, and application-level traceability.
 
-First, run the development server:
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). The prototype is designed to run without paid APIs, external credentials, or ERP/PLM access.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demonstration workflow
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Select **Launch interactive demo**.
+2. Open **Change Requests** and run impact analysis for CR-1042.
+3. Review affected label variants and run the agent workflow.
+4. In **Label Studio** or **Validation Center**, inject the missing-warning demo error and run validation. The critical failure blocks approval.
+5. Restore the warning, rerun validation, and complete the simulated RPA tasks.
+6. Record a reviewer decision in **Review & Approval** and inspect the release gates.
+7. Simulate controlled release and review the event history in **Audit Trail**.
 
-## Learn More
+**Guided demo** advances the same shared state through the 15-step scenario. Use **Reset** to restore the sample state.
 
-To learn more about Next.js, take a look at the following resources:
+## Scope and safety
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- All product, label, market, rule-library, and integration data is synthetic.
+- Agent outputs, OCR comparison, barcode checks, RPA actions, human decisions, and release events are simulated in the browser. No external LLM or production system is called.
+- The demo rule identifiers are invented and are not regulatory citations. A passing result is not regulatory certification or manufacturing authorization.
+- A critical deterministic failure blocks approval and release. Approval requires a reviewer comment and all simulated evidence-routing tasks; release additionally requires explicit reviewer approval.
+- Session state is stored in browser local storage. Reset clears the saved simulation state.
+- Audit history is application-level traceability, not a certified immutable audit system.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy the project to Vercel using the standard Next.js deployment flow. No environment variables are required for the simulation.
